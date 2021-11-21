@@ -1,4 +1,5 @@
 import React from "react";
+import logo from './logoblack.png';
 import "./login.css";
 
 export default function Login() {
@@ -8,8 +9,12 @@ export default function Login() {
   };
 
   return (
-
+    
     <section>
+      <div className="titlename">
+      <img src={logo} alt="logo" />
+      <h1>NITC Library Management System</h1>
+    </div>
       <div className="container">
         <div className="user signinBx">
           <div className="imgBx">
