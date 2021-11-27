@@ -15,7 +15,7 @@ export default function Login() {
 		<section>
 			<div className='titlename'>
 				<img src={logo} alt='logo' />
-				<h1>NITC Library Management System</h1>
+				<h1>NITC Library Management System </h1>
 			</div>
 			<div className='container'>
 				<div className='user signinBx'>
