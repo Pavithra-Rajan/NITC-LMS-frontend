@@ -24,8 +24,8 @@ section {
 section .container {
   position: relative;
   width: 800px;
-  height: 520px;
-  margin-top: 120px;
+  height: 650px;
+  margin-top: 150px;
   background-color: #ced6ff;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
   overflow: hidden;
