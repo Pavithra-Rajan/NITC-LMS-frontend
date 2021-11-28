@@ -1,9 +1,9 @@
 import React from "react";
 import "./styles.css";
-import Login from "./pages/login/login";
 import { Dashboard } from "./pages/dashboard/dashboard";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Login from "./pages/login/login";
 
 export default function App() {
 	return (
