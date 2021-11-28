@@ -1,11 +1,18 @@
 import React from "react";
 import "./styles.css";
 import { Dashboard } from "./pages/dashboard/dashboard";
-
+import axios from "axios";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./pages/login/login";
 
 export default function App() {
+	const env = "prod";
+	let baseURL =
+		env === "prod"
+			? "https://nitc-lms-backend.herokuapp.com/api"
+			: "http://localhost:5000/api";
+	axios.defaults.baseURL = baseURL;
+	axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 	return (
 		<Router>
 			<div className='App'>

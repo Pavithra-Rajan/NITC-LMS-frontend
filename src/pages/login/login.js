@@ -1,9 +1,48 @@
-import logo from "./logoblack.png";
+import sigINImng from "./signIN.jpg";
+import sigUPImng from "./signUP.jpg";
 import "./login.css";
+import axios from "axios";
 import React, { useState } from "react";
+import { Alert } from "@mui/material";
+import { AdminPanelSettings } from "@mui/icons-material";
+import { Redirect } from "react-router";
 
 const SignUP = ({ toggleForm }) => {
 	const [selectedOption, setSelectedOption] = useState(null);
+	const initialData = {
+		userID: null,
+		userName: null,
+		password: null,
+		phoneNo: null,
+		email: null,
+		dept: null,
+		role: null,
+		programme: null,
+		validity: null,
+		tFlag: null,
+	};
+	const [data, setData] = useState(initialData);
+	const [error, setError] = useState(null);
+	const handleChange = (e) => {
+		let name = e.target.name;
+		let value = e.target.value;
+		setData({ ...data, [name]: value });
+	};
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log(data);
+		axios({
+			method: "post",
+			url: "/auth/register",
+			data: data,
+		})
+			.then((resp) => {
+				return <SignIN />;
+			})
+			.catch((err) => {
+				setError(err.response);
+			});
+	};
 	return (
 		<div className='user signupBx'>
 			<div className='formBx'>
@@ -13,31 +52,70 @@ const SignUP = ({ toggleForm }) => {
 						type='text'
 						minLength='9'
 						maxLength='9'
-						name=''
+						name='userID'
 						placeholder='Roll Number/Employee ID'
+						value={data.userID}
+						onChange={(e) => {
+							e.target.value = e.target.value.toUpperCase();
+							handleChange(e);
+						}}
+						required
 					/>
-					<input type='text' name='' placeholder='Username' />
-					<input type='password' name='' placeholder='Password' />
 					<input
+						onChange={handleChange}
+						type='text'
+						name='userName'
+						placeholder='Username'
+						required
+					/>
+					<input
+						onChange={handleChange}
+						type='password'
+						name='password'
+						placeholder='Password'
+						required
+					/>
+					<input
+						onChange={handleChange}
 						type='tel'
 						minLength='10'
 						maxLength='10'
-						name=''
+						name='phoneNo'
 						placeholder='Phone'
+						required
 					/>
-					<input type='email' name='' placeholder='Email Address' />
+					<input
+						onChange={handleChange}
+						type='email'
+						name='email'
+						placeholder='Email Address'
+						required
+					/>
 
-					<select onChange={(e) => setSelectedOption(e.target.value)}>
+					<select
+						name='role'
+						onChange={(e) => {
+							handleChange(e);
+							setSelectedOption(e.target.value);
+						}}
+						required
+					>
 						<option selected>Role</option>
-						<option value='Student'>Student</option>
-						<option value='Librarian'>Librarian</option>
-						<option value='Staff'>Staff</option>
+						<option value='student'>Student</option>
+						<option value='librarian'>Librarian</option>
+						<option value='staff'>Staff</option>
 					</select>
 
 					<br />
-					{selectedOption === "Student" && (
+					{selectedOption === "student" && (
 						<div>
-							<input type='' placeholder='Department' list='dept' />
+							<input
+								onChange={handleChange}
+								name='dept'
+								placeholder='Department'
+								list='dept'
+								required
+							/>
 							<datalist id='dept'>
 								<option>Department of Architecture</option>
 								<option>Department of Chemical Engineering</option>
@@ -55,7 +133,13 @@ const SignUP = ({ toggleForm }) => {
 								<option>School of Management Studies</option>
 								<option>School of Nano Science and Technology</option>
 							</datalist>
-							<input type='' placeholder='Programme' list='prog' />
+							<input
+								onChange={handleChange}
+								name='programme'
+								placeholder='Programme'
+								list='prog'
+								required
+							/>
 							<datalist id='prog'>
 								<option>B.Tech</option>
 								<option>M.Tech</option>
@@ -64,17 +148,26 @@ const SignUP = ({ toggleForm }) => {
 								<option>MCA</option>
 							</datalist>
 							<input
+								onChange={handleChange}
 								id='validity'
 								placeholder='validity'
 								type='date'
 								class='required'
+								name='validity'
+								required
 							/>
 						</div>
 					)}
 
-					{selectedOption === "Staff" && (
+					{selectedOption === "staff" && (
 						<div>
-							<input type='' placeholder='Department' list='dept' />
+							<input
+								onChange={handleChange}
+								name='dept'
+								placeholder='Department'
+								list='dept'
+								required
+							/>
 							<datalist id='dept'>
 								<option>Department of Architecture</option>
 								<option>Department of Chemical Engineering</option>
@@ -92,7 +185,13 @@ const SignUP = ({ toggleForm }) => {
 								<option>School of Management Studies</option>
 								<option>School of Nano Science and Technology</option>
 							</datalist>
-							<input type='' placeholder='Teaching/Non-Teaching' list='Tflag' />
+							<input
+								onChange={handleChange}
+								name='tFlag'
+								placeholder='Teaching/Non-Teaching'
+								list='Tflag'
+								required
+							/>
 							<datalist id='Tflag'>
 								<option>Teaching</option>
 								<option>Non-teaching</option>
@@ -100,7 +199,17 @@ const SignUP = ({ toggleForm }) => {
 						</div>
 					)}
 
-					<input type='submit' name='' value='Register' />
+					<input
+						type='submit'
+						onClick={handleSubmit}
+						name=''
+						value='Register'
+					/>
+					{error && (
+						<Alert variant='filled' severity='error'>
+							{error}
+						</Alert>
+					)}
 					<p className='signup'>
 						Already have an account ?
 						<a href='#' onClick={toggleForm}>
@@ -110,23 +219,48 @@ const SignUP = ({ toggleForm }) => {
 				</form>
 			</div>
 			<div className='imgBx'>
-				<img
-					src='https://images.pexels.com/photos/1907785/pexels-photo-1907785.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-					alt=''
-				/>
+				<img src={sigUPImng} alt='' />
 			</div>
 		</div>
 	);
 };
 
 const SignIN = ({ toggleForm }) => {
+	const initialData = {
+		userID: "",
+		password: "",
+	};
+	const [data, setData] = useState(initialData);
+	const [error, setError] = useState(null);
+	const [success, setSuccess] = useState(null);
+	const handleChange = (e) => {
+		let name = e.target.name;
+		let value = e.target.value;
+		setData({ ...data, [name]: value });
+	};
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		console.log(data);
+		axios({
+			method: "post",
+			url: "/auth/login",
+			data: data,
+		})
+			.then((resp) => {
+				setError(null);
+				setSuccess(true);
+				const { admin, token } = resp.data;
+				axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
+			})
+			.catch((err) => {
+				setError(err.response.data.message);
+				setSuccess(null);
+			});
+	};
 	return (
 		<div className='user signinBx'>
 			<div className='imgBx'>
-				<img
-					src='https://images.pexels.com/photos/1926988/pexels-photo-1926988.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-					alt=''
-				/>
+				<img src={sigINImng} alt='' />
 			</div>
 			<div className='formBx'>
 				<form action=''>
@@ -135,11 +269,30 @@ const SignIN = ({ toggleForm }) => {
 						type='text'
 						minLength='9'
 						maxLength='9'
-						name=''
+						name='userID'
+						onChange={(e) => {
+							e.target.value = e.target.value.toUpperCase();
+							handleChange(e);
+						}}
 						placeholder='Roll Number/Employee ID'
 					/>
-					<input type='password' name='' placeholder='Password' />
-					<input type='submit' name='' value='Login' />
+					<input
+						type='password'
+						name='password'
+						onChange={handleChange}
+						placeholder='Password'
+					/>
+					<input type='submit' onClick={handleSubmit} name='' value='Login' />
+					{error && (
+						<Alert variant='filled' severity='error'>
+							{error}
+						</Alert>
+					)}
+					{success && (
+						<Alert variant='filled' severity='success'>
+							{error}
+						</Alert>
+					)}
 					<p className='signup'>
 						Don't have an account?
 						<a href='#' onClick={toggleForm}>
@@ -159,10 +312,6 @@ const Login = () => {
 	};
 	return (
 		<section>
-			<div className='titlename'>
-				<img src={logo} alt='logo' />
-				<h1>NITC Library Management System </h1>
-			</div>
 			<div className='container'>
 				<SignIN toggleForm={toggleForm} />
 				<SignUP toggleForm={toggleForm} />
