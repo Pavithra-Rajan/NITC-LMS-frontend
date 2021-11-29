@@ -29,6 +29,7 @@ import {
 	Link,
 	Redirect,
 } from "react-router-dom";
+import BookComponent from "../../components/book";
 
 const drawerWidth = 240;
 
@@ -57,7 +58,6 @@ const AppBar = styled(MuiAppBar, {
 	transition: theme.transitions.create(["margin", "width"], {
 		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.leavingScreen,
-		
 	}),
 	...(open && {
 		width: `calc(100% - ${drawerWidth}px)`,
@@ -76,7 +76,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 	// necessary for content to be below app bar
 	...theme.mixins.toolbar,
 	justifyContent: "flex-start",
-	
 }));
 
 const FirstComponent = () => {
@@ -84,26 +83,27 @@ const FirstComponent = () => {
 		<>
 			<h2>Check Out</h2>
 			<TextField
-				id="book-name"
-				label="Book Name"
-				variant="standard"
-				justifyContent="center"
-				align="center"
-				style = {{width: 400}}
+				id='book-name'
+				label='Book Name'
+				variant='standard'
+				justifyContent='center'
+				align='center'
+				style={{ width: 400 }}
 			/>
 			<br />
 			<TextField
-				id="book-name"
-				label="Book Name"
-				variant="standard"
-				justifyContent="center"
-				align="center"
-				style = {{width: 400}}
+				id='book-name'
+				label='Book Name'
+				variant='standard'
+				justifyContent='center'
+				align='center'
+				style={{ width: 400 }}
 			/>
 			<br />
-			<br/>
-			<Button variant="contained" style={{ background: '#677eff' }}>Submit</Button>
-			
+			<br />
+			<Button variant='contained' style={{ background: "#677eff" }}>
+				Submit
+			</Button>
 		</>
 	);
 };
@@ -161,7 +161,7 @@ export const Dashboard = () => {
 		<Router basename='/dashboard'>
 			<Box sx={{ display: "flex" }}>
 				<CssBaseline />
-				<AppBar position='fixed' open={open} style={{ background: '#677eff' }}>
+				<AppBar position='fixed' open={open} style={{ background: "#677eff" }}>
 					<Toolbar>
 						<IconButton
 							color='inherit'
@@ -210,7 +210,7 @@ export const Dashboard = () => {
 							</ListItemIcon>
 							<ListItemText primary={"Checkout"} />
 						</ListItem>
-						<ListItem component={Link} to='/second' button key={"inbox"}>
+						<ListItem component={Link} to='/books' button key={"inbox"}>
 							<ListItemIcon>
 								<LibraryBooksIcon />
 							</ListItemIcon>
@@ -236,8 +236,8 @@ export const Dashboard = () => {
 						<Route path='/first'>
 							<FirstComponent />
 						</Route>
-						<Route path='/second'>
-							<SecondComponent />
+						<Route path='/books'>
+							<BookComponent />
 						</Route>
 						<Redirect to='/first' />
 					</Switch>
