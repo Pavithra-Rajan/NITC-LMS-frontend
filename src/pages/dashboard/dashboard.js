@@ -38,7 +38,10 @@ import {
 	Redirect,
 } from "react-router-dom";
 import BookComponent from "../../components/book";
-
+import RequestComponent from "../../components/RequestComponent";
+import DueComponent from "../../components/DueComponent";
+import BorrowedComponent from "../../components/BorrowedComponent";
+import Donate from "../../components/Donate";
 const drawerWidth = 240;
   
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -224,17 +227,17 @@ export const Dashboard = () => {
 							</ListItemIcon>
 							<ListItemText primary={"Books"} />
 						</ListItem>
-						<ListItem component={Link} to='/first' button key={"inbox"}>
+						<ListItem component={Link} to='/borrowal' button key={"inbox"}>
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
 							<ListItemText primary={"Borrowal"} />
 						</ListItem>
-						<ListItem component={Link} to='/second' button key={"inbox"}>
+						<ListItem component={Link} to='/donate' button key={"inbox"}>
 							<ListItemIcon>
 								<CollectionsBookmarkIcon />
 							</ListItemIcon>
-							<ListItemText primary={"inbox"} />
+							<ListItemText primary={"Donate/Request new"} />
 						</ListItem>
 					</List>
 				</Drawer>
@@ -247,7 +250,15 @@ export const Dashboard = () => {
 						<Route path='/books'>
 							<BookComponent />
 						</Route>
-						<Redirect to='/first' />
+						<Route path='/borrowal'>
+							<BorrowedComponent />
+							<RequestComponent />
+							<DueComponent />
+						</Route>
+						<Route path='/donate'>
+							<Donate />
+						</Route>
+						<Redirect to='/borrowal' />
 					</Switch>
 				</Main>
 			</Box>
