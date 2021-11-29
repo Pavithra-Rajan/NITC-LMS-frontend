@@ -7,10 +7,13 @@ import Login from "./pages/login/login";
 
 export default function App() {
 	const env = "prod";
-	let baseURL =
-		env === "prod"
-			? "https://nitc-lms-backend.herokuapp.com/api"
-			: "http://localhost:5000/api";
+	// const db_url =
+	// 	"heroku pg:psql postgresql-opaque-59198 --app nitc-lms-backend";
+	// let baseURL =
+	// 	env === "prod"
+	// 		? "https://nitc-lms-backend.herokuapp.com/api"
+	// 		: "http://localhost:5000/api";
+	let baseURL = "http://localhost:5000/api";
 	axios.defaults.baseURL = baseURL;
 	axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 	return (
