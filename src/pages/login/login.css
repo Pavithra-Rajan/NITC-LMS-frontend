@@ -22,7 +22,7 @@ section {
 section .container {
 	position: relative;
 	width: 800px;
-	height: 650px;
+	height: 680px;
 	background-color: #ced6ff;
 	box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
