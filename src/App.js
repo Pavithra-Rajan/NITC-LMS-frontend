@@ -1,6 +1,7 @@
 import React from "react";
 import "./styles.css";
 import { Dashboard } from "./pages/dashboard/dashboard";
+import { Admin } from "./pages/admin/admindash";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./pages/login/login";
@@ -25,6 +26,9 @@ export default function App() {
 					</Route>
 					<Route path='/dashboard'>
 						<Dashboard />
+					</Route>
+					<Route path='/admin'>
+						<Admin />
 					</Route>
 				</Switch>
 			</div>
