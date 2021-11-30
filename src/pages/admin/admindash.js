@@ -30,6 +30,7 @@ import {
 	Link,
 	Redirect,
 } from "react-router-dom";
+import ViewReq from "../../components/ViewReq";
 
 const drawerWidth = 240;
   
@@ -210,7 +211,7 @@ export const Admin = () => {
 							</ListItemIcon>
 							<ListItemText primary={"Add book"} />
 						</ListItem>
-						<ListItem component={Link} to='/second' button key={"inbox"}>
+						<ListItem component={Link} to='/viewrequests' button key={"inbox"}>
 							<ListItemIcon>
 								<LibraryBooksIcon />
 							</ListItemIcon>
@@ -241,6 +242,9 @@ export const Admin = () => {
 						</Route>
 						<Route path='/addbook'>
 							<AddBook />
+						</Route>
+						<Route path='/viewrequests'>
+							<ViewReq />
 						</Route>
 						<Redirect to='/addbook' />
 					</Switch>
