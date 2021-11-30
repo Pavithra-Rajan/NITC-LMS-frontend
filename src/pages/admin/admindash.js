@@ -31,7 +31,7 @@ import {
 	Redirect,
 } from "react-router-dom";
 import ViewReq from "../../components/ViewReq";
-
+import Search from "../../components/search";
 const drawerWidth = 240;
   
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -217,11 +217,11 @@ export const Admin = () => {
 							</ListItemIcon>
 							<ListItemText primary={"View Request"} />
 						</ListItem>
-						<ListItem component={Link} to='/first' button key={"inbox"}>
+						<ListItem component={Link} to='/searchuser' button key={"inbox"}>
 							<ListItemIcon>
 								<InboxIcon />
 							</ListItemIcon>
-							<ListItemText primary={"Borrowal"} />
+							<ListItemText primary={"Search"} />
 						</ListItem>
 						<ListItem component={Link} to='/second' button key={"inbox"}>
 							<ListItemIcon>
@@ -245,6 +245,9 @@ export const Admin = () => {
 						</Route>
 						<Route path='/viewrequests'>
 							<ViewReq />
+						</Route>
+						<Route path='/searchuser'>
+							<Search />
 						</Route>
 						<Redirect to='/addbook' />
 					</Switch>
