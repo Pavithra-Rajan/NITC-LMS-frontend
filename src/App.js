@@ -5,7 +5,7 @@ import { Admin } from "./pages/admin/admindash";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./pages/login/login";
-
+import Loader from "./components/Loader"
 export default function App() {
 	const env = "prod";
 	// const db_url =
@@ -29,6 +29,9 @@ export default function App() {
 					</Route>
 					<Route path='/admin'>
 						<Admin />
+					</Route>
+					<Route path='/loader'>
+						<Loader />
 					</Route>
 				</Switch>
 			</div>

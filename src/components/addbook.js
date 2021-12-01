@@ -8,7 +8,7 @@ import { FormControl, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRef, useState } from "react";
 import Counter from "./counter";
-const Tags = ({ data, handleDelete }) => {
+const Tags = ({ data, handleDelete }) => {  //styling for the tags in the new form
   return (
     <Box
       sx={{
@@ -37,7 +37,7 @@ const Tags = ({ data, handleDelete }) => {
 };
 
 export default function AddBook() {
-  const [alignment, setAlignment] = React.useState("New");
+  const [alignment, setAlignment] = React.useState("New"); //default when component renders is New
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -46,11 +46,11 @@ export default function AddBook() {
   const [tags, SetTags] = useState([]);
   const tagRef = useRef();
 
-  const handleDelete = (value) => {
+  const handleDelete = (value) => {                       //deletion of tags
     const newtags = tags.filter((val) => val !== value);
     SetTags(newtags);
   };
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = (e) => {                       //adding new tags
     e.preventDefault();
     SetTags([...tags, tagRef.current.value]);
     tagRef.current.value = "";
@@ -68,9 +68,9 @@ export default function AddBook() {
         <ToggleButton value="Existing">Existing</ToggleButton>
         <ToggleButton value="New">New</ToggleButton>
       </ToggleButtonGroup>
+        {/*Conditional rendering when existing is selected*/}
         {alignment === "Existing" && (
             <div>
-            
             <TextField
             id="ISBN"
             label="ISBN"
@@ -84,6 +84,7 @@ export default function AddBook() {
             </div>
         )}
 
+        {/*Conditional rendering when New is selected*/}
         {alignment === "New" && (
         <div>
           <TextField

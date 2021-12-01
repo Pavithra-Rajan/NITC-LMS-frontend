@@ -32,6 +32,7 @@ import {
 } from "react-router-dom";
 import ViewReq from "../../components/ViewReq";
 import Search from "../../components/search";
+
 const drawerWidth = 240;
   
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -249,6 +250,7 @@ export const Admin = () => {
 						<Route path='/searchuser'>
 							<Search />
 						</Route>
+						
 						<Redirect to='/addbook' />
 					</Switch>
 				</Main>
