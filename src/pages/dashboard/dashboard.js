@@ -30,7 +30,7 @@ import {
 	Redirect,
 } from "react-router-dom";
 import BookComponent from "../../components/Book";
-import DueComponent from "../../components/DueComponent";
+import DueComponent from "../../components/Dues";
 import { AuthContext, userAuth } from "../../AuthContext";
 import RequestAndDonate from "../../components/RequestAndDonate";
 import { Borrowal } from "../../components/Borrowal";

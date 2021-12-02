@@ -20,7 +20,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import TextField from "@mui/material/TextField";
-import AddBook from "../../components/Addbook";
+import AddBook from "../../components/AddBook";
 
 import logo from "./logo.png";
 import {
@@ -30,8 +30,8 @@ import {
 	Link,
 	Redirect,
 } from "react-router-dom";
-import Search from "../../components/Search";
-import ViewRequests from "../../components/ViewRequest";
+import Search from "../../components/SearchComponent";
+import ViewRequests from "../../components/ViewRequests";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(

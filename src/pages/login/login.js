@@ -257,7 +257,8 @@ const SignIN = ({ toggleForm }) => {
 					setIsLoading(false);
 				}, 500);
 				const userLoggedIn = resp.data;
-				if (userLoggedIn.isAdmin) {
+				console.log(userLoggedIn);
+				if (userLoggedIn.admin) {
 					localStorage.setItem("admin", JSON.stringify(userLoggedIn));
 					history.push("/admin");
 				} else {
