@@ -1,11 +1,13 @@
 import sigINImng from "./signIN.jpg";
 import sigUPImng from "./signUP.jpg";
-import "./login.css";
+import "./Login.css";
 import axios from "axios";
 import React, { useState } from "react";
 import { Alert } from "@mui/material";
 import { AdminPanelSettings } from "@mui/icons-material";
+import { useHistory } from "react-router-dom";
 import { Redirect } from "react-router";
+import BookLoaderComponent from "../../components/Loaders/BookLoader";
 
 const SignUP = ({ toggleForm }) => {
 	const [selectedOption, setSelectedOption] = useState(null);
@@ -233,14 +235,16 @@ const SignIN = ({ toggleForm }) => {
 	const [data, setData] = useState(initialData);
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const history = useHistory();
 	const handleChange = (e) => {
 		let name = e.target.name;
 		let value = e.target.value;
 		setData({ ...data, [name]: value });
 	};
 	const handleSubmit = (e) => {
+		setIsLoading(true);
 		e.preventDefault();
-		console.log(data);
 		axios({
 			method: "post",
 			url: "/auth/login",
@@ -249,59 +253,85 @@ const SignIN = ({ toggleForm }) => {
 			.then((resp) => {
 				setError(null);
 				setSuccess(true);
-				const { admin, token } = resp.data;
-				axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 500);
+				const userLoggedIn = resp.data;
+				console.log(userLoggedIn);
+				if (userLoggedIn.admin) {
+					localStorage.setItem("admin", JSON.stringify(userLoggedIn));
+					history.push("/admin");
+				} else {
+					localStorage.setItem("user", JSON.stringify(userLoggedIn));
+					history.push("/dashboard");
+				}
 			})
 			.catch((err) => {
 				setError(err.response.data.message);
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 500);
 				setSuccess(null);
 			});
 	};
 	return (
-		<div className='user signinBx'>
-			<div className='imgBx'>
-				<img src={sigINImng} alt='' />
-			</div>
-			<div className='formBx'>
-				<form action=''>
-					<h2>Log In</h2>
-					<input
-						type='text'
-						minLength='9'
-						maxLength='9'
-						name='userID'
-						onChange={(e) => {
-							e.target.value = e.target.value.toUpperCase();
-							handleChange(e);
-						}}
-						placeholder='Roll Number/Employee ID'
-					/>
-					<input
-						type='password'
-						name='password'
-						onChange={handleChange}
-						placeholder='Password'
-					/>
-					<input type='submit' onClick={handleSubmit} name='' value='Login' />
-					{error && (
-						<Alert variant='filled' severity='error'>
-							{error}
-						</Alert>
-					)}
-					{success && (
-						<Alert variant='filled' severity='success'>
-							{error}
-						</Alert>
-					)}
-					<p className='signup'>
-						Don't have an account?
-						<a href='#' onClick={toggleForm}>
-							Register.
-						</a>
-					</p>
-				</form>
-			</div>
-		</div>
+		<>
+			{isLoading ? (
+				<BookLoaderComponent home />
+			) : (
+				<div className='user signinBx'>
+					<div className='imgBx'>
+						<img src={sigINImng} alt='' />
+					</div>
+					<div className='formBx'>
+						<form action=''>
+							<h2>Log In</h2>
+							<input
+								type='text'
+								minLength='9'
+								maxLength='9'
+								name='userID'
+								value={data.userID}
+								onChange={(e) => {
+									e.target.value = e.target.value.toUpperCase();
+									handleChange(e);
+								}}
+								placeholder='Roll Number/Employee ID'
+							/>
+							<input
+								type='password'
+								name='password'
+								value={data.password}
+								onChange={handleChange}
+								placeholder='Password'
+							/>
+							<input
+								type='submit'
+								onClick={handleSubmit}
+								name=''
+								value='Login'
+							/>
+							{error && (
+								<Alert variant='filled' severity='error'>
+									{error}
+								</Alert>
+							)}
+							{success && (
+								<Alert variant='filled' severity='success'>
+									Succesfully Logged In
+								</Alert>
+							)}
+							<p className='signup'>
+								Don't have an account?
+								<a href='#' onClick={toggleForm}>
+									Register.
+								</a>
+							</p>
+						</form>
+					</div>
+				</div>
+			)}
+		</>
 	);
 };
 
