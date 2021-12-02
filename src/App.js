@@ -4,7 +4,7 @@ import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { Admin } from "./pages/Dashboard/AdminDashboard";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Login from "./pages/Login/Login";
+import Login from "./pages/login/Login";
 import Error from "./pages/Error";
 import { AuthProvider } from "./AuthContext";
 
