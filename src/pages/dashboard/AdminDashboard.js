@@ -36,6 +36,7 @@ import ViewRequests from "../../components/ViewRequests";
 import DonateBook from "../../components/DonateBook";
 import SuggestBook from "../../components/Suggestions";
 import Fines from "../../components/Fines";
+import BookSearch from "../../components/SearchCheck.js";
 
 const drawerWidth = 240;
 
@@ -194,6 +195,9 @@ export const Admin = () => {
 						</Route>
 						<Route path='/fines'>
 							<Fines />
+						</Route>
+						<Route path='/search'>
+							<BookSearch />
 						</Route>
 
 						<Redirect to='/addbook' />
