@@ -3,7 +3,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Cancel, Tag } from "@mui/icons-material";
+import { Cancel, Public, Tag } from "@mui/icons-material";
 import { FormControl, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRef, useState } from "react";
@@ -49,7 +49,14 @@ export default function AddBook() {
 	const tagRef = useRef();
 	const authorRef = useRef();
 
-	const handleDelete = (value, label) => {
+	const [auth, SetAuth] = useState([]);
+	const AuthRef = useRef();
+
+	const [ISBN, SetISBN] = useState("");
+	const [Name, SetName] = useState("");
+	const [Pub, SetPub] = useState("");
+
+	const handleDelete = (value) => {
 		//deletion of tags
 		if (label == "tags") {
 			const newtags = tags.filter((val) => val !== value);
@@ -69,6 +76,18 @@ export default function AddBook() {
 			setAuthors([...authors, authorRef.current.value]);
 			authorRef.current.value = "";
 		}
+	};
+
+	const handleDeleteAuth = (value) => {
+		//deletion of authors
+		const NewAuth = auth.filter((val) => val !== value);
+		SetAuth(NewAuth);
+	};
+	const handleOnSubmitAuth = (e) => {
+		//adding new authors
+		e.preventDefault();
+		SetAuth([...auth, AuthRef.current.value]);
+		AuthRef.current.value = "";
 	};
 
 	return (
@@ -92,6 +111,10 @@ export default function AddBook() {
 						justifyContent='center'
 						align='center'
 						style={{ width: 400, marginTop: "20px" }}
+						value={ISBN}
+						onChange={(e) => {
+							SetISBN(e.target.value);
+						}}
 					/>
 					<br />
 					<Button
@@ -117,6 +140,10 @@ export default function AddBook() {
 						justifyContent='center'
 						align='center'
 						style={{ width: 400, marginTop: "20px" }}
+						value={ISBN}
+						onChange={(e) => {
+							SetISBN(e.target.value);
+						}}
 					/>
 					<br />
 					<TextField
@@ -126,6 +153,10 @@ export default function AddBook() {
 						justifyContent='center'
 						align='center'
 						style={{ width: 400, marginTop: "20px" }}
+						value={Name}
+						onChange={(e) => {
+							SetName(e.target.value);
+						}}
 					/>
 					<br />
 					<TextField
@@ -135,22 +166,46 @@ export default function AddBook() {
 						justifyContent='center'
 						align='center'
 						style={{ width: 400, marginTop: "20px" }}
+						value={Pub}
+						onChange={(e) => {
+							SetPub(e.target.value);
+						}}
 					/>
+
 					<br />
-					<TextField
-						id='author'
-						label='Authors'
-						variant='standard'
-						justifyContent='center'
-						align='center'
-						style={{ width: 400, marginTop: "20px" }}
-					/>
-					<br />
+					<Box sx={{ flexGrow: 1 }}>
+						<form onSubmit={handleOnSubmitAuth}>
+							<TextField
+								inputRef={AuthRef}
+								style={{ width: 400, marginTop: "35px" }}
+								variant='standard'
+								sx={{ margin: "1rem 0" }}
+								margin='none'
+								placeholder={auth.length < 4 ? "Authors" : ""}
+								InputProps={{
+									startAdornment: (
+										<Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+											{auth.map((data, index) => {
+												return (
+													<Tags
+														data={data}
+														handleDelete={handleDeleteAuth}
+														key={index}
+													/>
+												);
+											})}
+										</Box>
+									),
+								}}
+							/>
+						</form>
+					</Box>
+
 					<Box sx={{ flexGrow: 1 }}>
 						<form onSubmit={handleOnSubmit}>
 							<TextField
 								inputRef={tagRef}
-								style={{ width: 400, marginTop: "35px" }}
+								style={{ width: 400, marginTop: "20px", marginBottom: "25px" }}
 								variant='standard'
 								sx={{ margin: "1rem 0" }}
 								margin='none'
