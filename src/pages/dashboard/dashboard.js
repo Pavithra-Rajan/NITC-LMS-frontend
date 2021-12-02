@@ -34,6 +34,7 @@ import DueComponent from "../../components/Dues";
 import { AuthContext, userAuth } from "../../AuthContext";
 import RequestAndDonate from "../../components/RequestAndDonate";
 import { Borrowal } from "../../components/Borrowal";
+import BookLoaderComponent from "../../components/Loaders/BookLoader";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -85,10 +86,12 @@ export const Dashboard = () => {
 	const theme = useTheme();
 	const [open, setOpen] = useState(true);
 	const [user, setUser] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const history = useHistory();
 	const { isLoggedIn, userLoggedIn } = useContext(AuthContext);
 	useEffect(() => {
 		if (!isLoggedIn) {
+			// console.log(userLoggedIn);
 			history.push("/error");
 			console.log("no user");
 		} else {
@@ -105,98 +108,122 @@ export const Dashboard = () => {
 		setOpen(false);
 	};
 
+	const handleLogout = () => {
+		setIsLoading(true);
+		setTimeout(() => {
+			localStorage.removeItem("user");
+			localStorage.removeItem("admin");
+			history.push("/login");
+		}, 1000);
+	};
+
 	return (
 		<Router basename='/dashboard'>
-			<Box sx={{ display: "flex" }}>
-				<CssBaseline />
-				<AppBar position='fixed' open={open} style={{ background: "#677eff" }}>
-					<Toolbar>
-						<IconButton
-							color='inherit'
-							aria-label='open drawer'
-							onClick={handleDrawerOpen}
-							edge='start'
-							sx={{ mr: 2, ...(open && { display: "none" }) }}
+			<>
+				{isLoading ? (
+					<BookLoaderComponent />
+				) : (
+					<Box sx={{ display: "flex" }}>
+						<CssBaseline />
+						<AppBar
+							position='fixed'
+							open={open}
+							style={{ background: "#677eff" }}
 						>
-							<MenuIcon />
-						</IconButton>
+							<Toolbar>
+								<IconButton
+									color='inherit'
+									aria-label='open drawer'
+									onClick={handleDrawerOpen}
+									edge='start'
+									sx={{ mr: 2, ...(open && { display: "none" }) }}
+								>
+									<MenuIcon />
+								</IconButton>
 
-						<Button onClick={handleDrawerClose} edge='start'>
-							<img style={{ maxWidth: 40 }} src={logo} alt='logo' />
-						</Button>
+								<Button onClick={handleDrawerClose} edge='start'>
+									<img style={{ maxWidth: 40 }} src={logo} alt='logo' />
+								</Button>
 
-						<Typography sx={{ mx: 2 }} variant='h6'>
-							NITC Library Management System
-						</Typography>
-						<Box sx={{ flexGrow: 1 }} />
-						<IconButton color='inherit' aria-label='open drawer' edge='start'>
-							<LogoutIcon />
-						</IconButton>
-					</Toolbar>
-				</AppBar>
-				<Drawer
-					sx={{
-						width: drawerWidth,
-						flexShrink: 0,
-						"& .MuiDrawer-paper": {
-							width: drawerWidth,
-							boxSizing: "border-box",
-						},
-					}}
-					variant='persistent'
-					anchor='left'
-					open={open}
-				>
-					<DrawerHeader>
-						<IconButton onClick={handleDrawerClose}></IconButton>
-					</DrawerHeader>
-					<Divider />
-					<List>
-						<ListItem component={Link} to='/books' button key={"inbox"}>
-							<ListItemIcon>
-								<LibraryBooksIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Books"} />
-						</ListItem>
-						<ListItem component={Link} to='/borrowal' button key={"inbox"}>
-							<ListItemIcon>
-								<InboxIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Borrowal"} />
-						</ListItem>
-						<ListItem component={Link} to='/donate' button key={"inbox"}>
-							<ListItemIcon>
-								<CollectionsBookmarkIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Donate/Request"} />
-						</ListItem>
-						<ListItem component={Link} to='/dues' button key={"inbox"}>
-							<ListItemIcon>
-								<AccountBalanceIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Library Dues"} />
-						</ListItem>
-					</List>
-				</Drawer>
-				<Main open={open}>
-					<DrawerHeader />
-					<Switch>
-						<Route path='/books'>
-							<BookComponent />
-						</Route>
-						<Route path='/borrowal'>
-							<Borrowal />
-						</Route>
-						<Route path='/dues'>
-							<DueComponent />
-						</Route>
-						<Route path='/donate'>
-							<RequestAndDonate />
-						</Route>
-						<Redirect to='/books' />
-					</Switch>
-				</Main>
-			</Box>
+								<Typography sx={{ mx: 2 }} variant='h6'>
+									NITC Library Management System
+								</Typography>
+								<Box sx={{ flexGrow: 1 }} />
+								<IconButton
+									onClick={handleLogout}
+									color='inherit'
+									aria-label='open drawer'
+									edge='start'
+								>
+									<LogoutIcon />
+								</IconButton>
+							</Toolbar>
+						</AppBar>
+						<Drawer
+							sx={{
+								width: drawerWidth,
+								flexShrink: 0,
+								"& .MuiDrawer-paper": {
+									width: drawerWidth,
+									boxSizing: "border-box",
+								},
+							}}
+							variant='persistent'
+							anchor='left'
+							open={open}
+						>
+							<DrawerHeader>
+								<IconButton onClick={handleDrawerClose}></IconButton>
+							</DrawerHeader>
+							<Divider />
+							<List>
+								<ListItem component={Link} to='/books' button key={"inbox"}>
+									<ListItemIcon>
+										<LibraryBooksIcon />
+									</ListItemIcon>
+									<ListItemText primary={"Books"} />
+								</ListItem>
+								<ListItem component={Link} to='/borrowal' button key={"inbox"}>
+									<ListItemIcon>
+										<InboxIcon />
+									</ListItemIcon>
+									<ListItemText primary={"Borrowal"} />
+								</ListItem>
+								<ListItem component={Link} to='/donate' button key={"inbox"}>
+									<ListItemIcon>
+										<CollectionsBookmarkIcon />
+									</ListItemIcon>
+									<ListItemText primary={"Donate/Request"} />
+								</ListItem>
+								<ListItem component={Link} to='/dues' button key={"inbox"}>
+									<ListItemIcon>
+										<AccountBalanceIcon />
+									</ListItemIcon>
+									<ListItemText primary={"Library Dues"} />
+								</ListItem>
+							</List>
+						</Drawer>
+						<Main open={open}>
+							<DrawerHeader />
+							<Switch>
+								<Route path='/books'>
+									<BookComponent />
+								</Route>
+								<Route path='/borrowal'>
+									<Borrowal />
+								</Route>
+								<Route path='/dues'>
+									<DueComponent />
+								</Route>
+								<Route path='/donate'>
+									<RequestAndDonate />
+								</Route>
+								<Redirect to='/books' />
+							</Switch>
+						</Main>
+					</Box>
+				)}
+			</>
 		</Router>
 	);
 };

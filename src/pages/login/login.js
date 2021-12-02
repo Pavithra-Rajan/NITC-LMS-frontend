@@ -2,7 +2,7 @@ import sigINImng from "./signIN.jpg";
 import sigUPImng from "./signUP.jpg";
 import "./Login.css";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert } from "@mui/material";
 import { AdminPanelSettings } from "@mui/icons-material";
 import { useHistory } from "react-router-dom";
@@ -268,6 +268,7 @@ const SignIN = ({ toggleForm }) => {
 			})
 			.catch((err) => {
 				setError(err.response.data.message);
+				// console.log(err.response.data.message);
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);
