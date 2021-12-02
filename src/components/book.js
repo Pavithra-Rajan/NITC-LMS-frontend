@@ -1,19 +1,18 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import img from "./reptile.jpg";
 import Card from "@mui/material/Card";
-import { styled } from "@mui/material/styles";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { Chip, Stack } from "@mui/material";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import Grid from "@mui/material/Grid";
 import { Box } from "@mui/system";
+import axios from "axios";
+import { AuthContext } from "../AuthContext";
+import BookLoaderComponent from "./Loaders/BookLoader";
 
 const toTitleCase = (str) => {
 	return str
@@ -25,13 +24,19 @@ const toTitleCase = (str) => {
 		.join(" ");
 };
 
-const Book = ({ book }) => {
+const Book = ({ book, requestBorrwal }) => {
 	const color = { available: "success", borrowed: "danger" };
+	const { user } = useContext(AuthContext);
 	return (
 		<Card sx={{ maxWidth: 270 }}>
 			<CardMedia component='img' alt='green iguana' height='140' image={img} />
 			<CardContent>
-				<Typography align='left' gutterBottom variant='h5' component='div'>
+				<Typography
+					align='left'
+					gutterBottom
+					variant='subheading1'
+					component='div'
+				>
 					<strong>{book.book_name}</strong>
 				</Typography>
 				<Divider sx={{ my: 1 }} />
@@ -52,17 +57,6 @@ const Book = ({ book }) => {
 					{toTitleCase(book.authors.join(" , "))}
 				</Typography>
 				<Divider sx={{ my: 1 }} />
-				{/* {Object.keys(book.availability).map((key, value) => (
-					<Typography
-						align='left'
-						variant='caption'
-						display='block'
-						style={{ color: color.key }}
-					>
-						{toTitleCase(key)} : {book.availability[key]}
-					</Typography>
-				))}
-				<Divider sx={{ my: 1 }} /> */}
 				{Object.keys(book.availability).map((key, value) => (
 					<Box display='inline-flex' justifyContent='flex-start'>
 						<Chip
@@ -74,7 +68,12 @@ const Book = ({ book }) => {
 						/>
 					</Box>
 				))}
-				<Button sx={{ mt: 1 }} variant='outlined' fullWidth>
+				<Button
+					sx={{ mt: 1 }}
+					variant='outlined'
+					onClick={() => requestBorrwal(book.isbn)}
+					fullWidth
+				>
 					Borrow
 				</Button>
 			</CardContent>
@@ -87,129 +86,55 @@ const Search = () => {
 	return <div></div>;
 };
 
-const BookComponent = (props) => {
-	const initialData = [
-		{
-			authors: [
-				"Thomas H Cormen",
-				"Charles E Leiserson",
-				"Ronald L",
-				"Rivest Clifford Stein",
-			],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Introduction To Algorithms",
-			isbn: "9780070131439",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "DSA", "Computer Science"],
-		},
-		{
-			authors: ["braham Silberschatz", "Peter B Galvin", "Greg Gagne"],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Operating System Concepts",
-			isbn: "9780470128725",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "OS", "Computer Science", "Design"],
-		},
-		{
-			authors: [
-				"Thomas H Cormen",
-				"Charles E Leiserson",
-				"Ronald L",
-				"Rivest Clifford Stein",
-			],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Introduction To Algorithms",
-			isbn: "9780070131439",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "DSA", "Computer Science"],
-		},
-		{
-			authors: ["braham Silberschatz", "Peter B Galvin", "Greg Gagne"],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Operating System Concepts",
-			isbn: "9780470128725",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "OS", "Computer Science", "Design"],
-		},
-		{
-			authors: [
-				"Thomas H Cormen",
-				"Charles E Leiserson",
-				"Ronald L",
-				"Rivest Clifford Stein",
-			],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Introduction To Algorithms",
-			isbn: "9780070131439",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "DSA", "Computer Science"],
-		},
-		{
-			authors: ["braham Silberschatz", "Peter B Galvin", "Greg Gagne"],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Operating System Concepts",
-			isbn: "9780470128725",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "OS", "Computer Science", "Design"],
-		},
-		{
-			authors: [
-				"Thomas H Cormen",
-				"Charles E Leiserson",
-				"Ronald L",
-				"Rivest Clifford Stein",
-			],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Introduction To Algorithms",
-			isbn: "9780070131439",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "DSA", "Computer Science"],
-		},
-		{
-			authors: ["braham Silberschatz", "Peter B Galvin", "Greg Gagne"],
-			availability: {
-				available: 5,
-				borrowed: 5,
-			},
-			book_name: "Operating System Concepts",
-			isbn: "9780470128725",
-			publisher: "MIT Press",
-			tags: ["Algorithms", "OS", "Computer Science", "Design"],
-		},
-	];
-	const [book, setBook] = useState(initialData);
+const BookComponent = () => {
+	const [book, setBook] = useState([]);
+	const [refresh, setRefresh] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const { user } = useContext(AuthContext);
+	useEffect(() => {
+		axios
+			.get(`/book?userID=${user.user_id}`)
+			.then((resp) => {
+				console.log(axios.defaults);
+				setBook(resp.data.data);
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 1000);
+			})
+			.catch((err) => console.log(err));
+	}, [refresh]);
+	const requestBorrwal = (isbn) => {
+		setIsLoading(true);
+		const config = {
+			headers: { Authorization: `Bearer ${user.token}` },
+		};
+		const data = {};
+		axios
+			.post(`/user/${user.user_id}/borrow?isbn=${isbn}`, data, config)
+			.then((resp) => {
+				setRefresh(!refresh);
+				setIsLoading(false);
+				console.log(resp);
+			})
+			.catch((err) => console.log(err.response));
+	};
 	return (
-		<Box p={2}>
-			<Search />
-			<Grid container>
-				{book.map((book) => (
-					<Grid my={3} xs={3}>
-						<Book book={book} />
+		<>
+			{isLoading ? (
+				<BookLoaderComponent />
+			) : (
+				<Box p={2}>
+					<Search />
+					<Grid container>
+						{book.map((book) => (
+							<Grid my={3} xs={3}>
+								<Book book={book} requestBorrwal={requestBorrwal} />
+							</Grid>
+						))}
 					</Grid>
-				))}
-			</Grid>
-		</Box>
+				</Box>
+			)}
+		</>
 	);
 };
 
