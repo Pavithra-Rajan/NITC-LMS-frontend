@@ -19,6 +19,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import MoneyIcon from '@mui/icons-material/Money';
 import TextField from "@mui/material/TextField";
 import AddBook from "../../components/AddBook";
 import { useHistory } from "react-router";
@@ -35,6 +36,10 @@ import Search from "../../components/SearchComponent";
 import ViewRequests from "../../components/ViewRequests";
 import { AuthContext } from "../../AuthContext";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
+import DonateBook from "../../components/DonateBook";
+import SuggestBook from "../../components/Suggestions";
+import Fines from "../../components/Fines";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -164,6 +169,7 @@ export const Admin = () => {
 					<Drawer
 						sx={{
 							width: drawerWidth,
+<<<<<<< HEAD
 							flexShrink: 0,
 							"& .MuiDrawer-paper": {
 								width: drawerWidth,
@@ -222,6 +228,71 @@ export const Admin = () => {
 							<Route path='/searchuser'>
 								<Search />
 							</Route>
+=======
+							boxSizing: "border-box",
+						},
+					}}
+					variant='persistent'
+					anchor='left'
+					open={open}
+				>
+					<DrawerHeader>
+						<IconButton onClick={handleDrawerClose}></IconButton>
+					</DrawerHeader>
+					<Divider />
+					<List>
+						<ListItem component={Link} to='/addbook' button key={"inbox"}>
+							<ListItemIcon>
+								<AccountBoxIcon />
+							</ListItemIcon>
+							<ListItemText primary={"Add book"} />
+						</ListItem>
+						<ListItem component={Link} to='/viewrequests' button key={"inbox"}>
+							<ListItemIcon>
+								<LibraryBooksIcon />
+							</ListItemIcon>
+							<ListItemText primary={"View Request"} />
+						</ListItem>
+						<ListItem component={Link} to='/searchuser' button key={"inbox"}>
+							<ListItemIcon>
+								<InboxIcon />
+							</ListItemIcon>
+							<ListItemText primary={"Search"} />
+						</ListItem>
+						<ListItem component={Link} to='/donate' button key={"inbox"}>
+							<ListItemIcon>
+								<CollectionsBookmarkIcon />
+							</ListItemIcon>
+							<ListItemText primary={"Donate/Suggest"} />
+						</ListItem>
+						<ListItem component={Link} to='/fines' button key={"inbox"}>
+							<ListItemIcon>
+								<MoneyIcon />
+							</ListItemIcon>
+							<ListItemText primary={"Fines"} />
+						</ListItem>
+					</List>
+				</Drawer>
+				<Main open={open}>
+					<DrawerHeader />
+					<Switch>
+						<Route path='/addbook'>
+							<AddBook />
+						</Route>
+						<Route path='/viewrequests'>
+							<ViewRequests />
+						</Route>
+						<Route path='/searchuser'>
+							<Search />
+						</Route>
+						<Route path='/donate'>
+							<DonateBook />
+							<SuggestBook />
+						</Route>
+						<Route path='/fines'>
+							<Fines />
+						</Route>
+>>>>>>> refs/remotes/origin/main
 
 							<Redirect to='/addbook' />
 						</Switch>

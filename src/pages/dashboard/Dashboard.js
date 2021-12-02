@@ -22,6 +22,7 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { useHistory } from "react-router";
 
 import logo from "./logo.png";
+
 import {
 	BrowserRouter as Router,
 	Route,
