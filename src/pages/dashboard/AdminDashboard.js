@@ -19,6 +19,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import MoneyIcon from '@mui/icons-material/Money';
 import TextField from "@mui/material/TextField";
 import AddBook from "../../components/AddBook";
 
@@ -32,6 +33,10 @@ import {
 } from "react-router-dom";
 import Search from "../../components/SearchComponent";
 import ViewRequests from "../../components/ViewRequests";
+import DonateBook from "../../components/DonateBook";
+import SuggestBook from "../../components/Suggestions";
+import Fines from "../../components/Fines";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -157,11 +162,17 @@ export const Admin = () => {
 							</ListItemIcon>
 							<ListItemText primary={"Search"} />
 						</ListItem>
-						<ListItem component={Link} to='/second' button key={"inbox"}>
+						<ListItem component={Link} to='/donate' button key={"inbox"}>
 							<ListItemIcon>
 								<CollectionsBookmarkIcon />
 							</ListItemIcon>
-							<ListItemText primary={"Donate/Request new"} />
+							<ListItemText primary={"Donate/Suggest"} />
+						</ListItem>
+						<ListItem component={Link} to='/fines' button key={"inbox"}>
+							<ListItemIcon>
+								<MoneyIcon />
+							</ListItemIcon>
+							<ListItemText primary={"Fines"} />
 						</ListItem>
 					</List>
 				</Drawer>
@@ -176,6 +187,13 @@ export const Admin = () => {
 						</Route>
 						<Route path='/searchuser'>
 							<Search />
+						</Route>
+						<Route path='/donate'>
+							<DonateBook />
+							<SuggestBook />
+						</Route>
+						<Route path='/fines'>
+							<Fines />
 						</Route>
 
 						<Redirect to='/addbook' />
