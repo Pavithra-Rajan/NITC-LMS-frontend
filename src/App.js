@@ -1,11 +1,13 @@
 import React from "react";
 import "./styles.css";
-import { Dashboard } from "./pages/dashboard/dashboard";
-import { Admin } from "./pages/admin/admindash";
+import { Dashboard } from "./pages/Dashboard/Dashboard";
+import { Admin } from "./pages/Dashboard/AdminDashboard";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Login from "./pages/login/login";
-import Loader from "./components/Loader"
+import Login from "./pages/Login/Login";
+import Error from "./pages/Error";
+import { AuthProvider } from "./AuthContext";
+
 export default function App() {
 	const env = "prod";
 	// const db_url =
@@ -30,8 +32,8 @@ export default function App() {
 					<Route path='/admin'>
 						<Admin />
 					</Route>
-					<Route path='/loader'>
-						<Loader />
+					<Route path='/error'>
+						<Error />
 					</Route>
 				</Switch>
 			</div>
