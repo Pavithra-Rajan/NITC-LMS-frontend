@@ -44,19 +44,31 @@ export default function AddBook() {
 		setAlignment(newAlignment);
 	};
 
-	const [tags, SetTags] = useState([]);
+	const [tags, setTags] = useState([]);
+	const [authors, setAuthors] = useState([]);
 	const tagRef = useRef();
+	const authorRef = useRef();
 
-	const handleDelete = (value) => {
+	const handleDelete = (value, label) => {
 		//deletion of tags
-		const newtags = tags.filter((val) => val !== value);
-		SetTags(newtags);
+		if (label == "tags") {
+			const newtags = tags.filter((val) => val !== value);
+			setTags(newtags);
+		} else if (label == "authors") {
+			const newAuthors = authors.filter((val) => val !== value);
+			setTags(newAuthors);
+		}
 	};
-	const handleOnSubmit = (e) => {
+	const handleOnSubmit = (e, label) => {
 		//adding new tags
 		e.preventDefault();
-		SetTags([...tags, tagRef.current.value]);
-		tagRef.current.value = "";
+		if (label == "tags") {
+			setTags([...tags, tagRef.current.value]);
+			tagRef.current.value = "";
+		} else if (label == "authors") {
+			setAuthors([...authors, authorRef.current.value]);
+			authorRef.current.value = "";
+		}
 	};
 
 	return (
@@ -133,6 +145,34 @@ export default function AddBook() {
 						align='center'
 						style={{ width: 400, marginTop: "20px" }}
 					/>
+					<br />
+					<Box sx={{ flexGrow: 1 }}>
+						<form onSubmit={handleOnSubmit}>
+							<TextField
+								inputRef={tagRef}
+								style={{ width: 400, marginTop: "35px" }}
+								variant='standard'
+								sx={{ margin: "1rem 0" }}
+								margin='none'
+								placeholder={tags.length < 4 ? "Tags" : ""}
+								InputProps={{
+									startAdornment: (
+										<Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+											{tags.map((data, index) => {
+												return (
+													<Tags
+														data={data}
+														handleDelete={handleDelete}
+														key={index}
+													/>
+												);
+											})}
+										</Box>
+									),
+								}}
+							/>
+						</form>
+					</Box>
 					<br />
 					<Box sx={{ flexGrow: 1 }}>
 						<form onSubmit={handleOnSubmit}>

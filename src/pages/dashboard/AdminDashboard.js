@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -21,6 +21,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import TextField from "@mui/material/TextField";
 import AddBook from "../../components/Addbook";
+import { useHistory } from "react-router";
 
 import logo from "./logo.png";
 import {
@@ -32,6 +33,8 @@ import {
 } from "react-router-dom";
 import Search from "../../components/SearchComponent";
 import ViewRequests from "../../components/ViewRequests";
+import { AuthContext } from "../../AuthContext";
+import BookLoaderComponent from "../../components/Loaders/BookLoader";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -91,97 +94,140 @@ export const Admin = () => {
 	const handleDrawerClose = () => {
 		setOpen(false);
 	};
+	const [userLogged, setUserLogged] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const history = useHistory();
+	const { user, isLoggedIn, Logout, LoginUser } = useContext(AuthContext);
+	useEffect(() => {
+		LoginUser();
+		if (!isLoggedIn) {
+			// console.log(userLoggedIn);
+			history.push("/error");
+			console.log("no user");
+		} else {
+			console.log("user logged in");
+			setUserLogged(user);
+			console.log(user);
+		}
+	}, []);
+
+	const handleLogout = () => {
+		setIsLoading(true);
+		setTimeout(() => {
+			localStorage.removeItem("user");
+			localStorage.removeItem("admin");
+			history.push("/login");
+		}, 1000);
+	};
 
 	return (
 		<Router basename='/admin'>
-			<Box sx={{ display: "flex" }}>
-				<CssBaseline />
-				<AppBar position='fixed' open={open} style={{ background: "#677eff" }}>
-					<Toolbar>
-						<IconButton
-							color='inherit'
-							aria-label='open drawer'
-							onClick={handleDrawerOpen}
-							edge='start'
-							sx={{ mr: 2, ...(open && { display: "none" }) }}
-						>
-							<MenuIcon />
-						</IconButton>
+			{isLoading ? (
+				<BookLoaderComponent />
+			) : (
+				<Box sx={{ display: "flex" }}>
+					<CssBaseline />
+					<AppBar
+						position='fixed'
+						open={open}
+						style={{ background: "#677eff" }}
+					>
+						<Toolbar>
+							<IconButton
+								color='inherit'
+								aria-label='open drawer'
+								onClick={handleDrawerOpen}
+								edge='start'
+								sx={{ mr: 2, ...(open && { display: "none" }) }}
+							>
+								<MenuIcon />
+							</IconButton>
 
-						<Button onClick={handleDrawerClose} edge='start'>
-							<img style={{ maxWidth: 40 }} src={logo} alt='logo' />
-						</Button>
+							<Button onClick={handleDrawerClose} edge='start'>
+								<img style={{ maxWidth: 40 }} src={logo} alt='logo' />
+							</Button>
 
-						<Typography sx={{ mx: 2 }} variant='h6'>
-							NITC Library Management System
-						</Typography>
-						<Box sx={{ flexGrow: 1 }} />
-						<IconButton color='inherit' aria-label='open drawer' edge='start'>
-							<LogoutIcon />
-						</IconButton>
-					</Toolbar>
-				</AppBar>
-				<Drawer
-					sx={{
-						width: drawerWidth,
-						flexShrink: 0,
-						"& .MuiDrawer-paper": {
+							<Typography sx={{ mx: 2 }} variant='h6'>
+								NITC Library Management System
+							</Typography>
+							<Box sx={{ flexGrow: 1 }} />
+							<IconButton
+								onClick={handleLogout}
+								color='inherit'
+								aria-label='open drawer'
+								edge='start'
+							>
+								<LogoutIcon />
+							</IconButton>
+						</Toolbar>
+					</AppBar>
+					<Drawer
+						sx={{
 							width: drawerWidth,
-							boxSizing: "border-box",
-						},
-					}}
-					variant='persistent'
-					anchor='left'
-					open={open}
-				>
-					<DrawerHeader>
-						<IconButton onClick={handleDrawerClose}></IconButton>
-					</DrawerHeader>
-					<Divider />
-					<List>
-						<ListItem component={Link} to='/addbook' button key={"inbox"}>
-							<ListItemIcon>
-								<AccountBoxIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Add book"} />
-						</ListItem>
-						<ListItem component={Link} to='/viewrequests' button key={"inbox"}>
-							<ListItemIcon>
-								<LibraryBooksIcon />
-							</ListItemIcon>
-							<ListItemText primary={"View Request"} />
-						</ListItem>
-						<ListItem component={Link} to='/searchuser' button key={"inbox"}>
-							<ListItemIcon>
-								<InboxIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Search"} />
-						</ListItem>
-						<ListItem component={Link} to='/second' button key={"inbox"}>
-							<ListItemIcon>
-								<CollectionsBookmarkIcon />
-							</ListItemIcon>
-							<ListItemText primary={"Donate/Request new"} />
-						</ListItem>
-					</List>
-				</Drawer>
-				<Main open={open}>
-					<DrawerHeader />
-					<Switch>
-						<Route path='/addbook'>
-							<AddBook />
-						</Route>
-						<Route path='/viewrequests'>
-							<ViewRequests />
-						</Route>
-						<Route path='/searchuser'>
-							<Search />
-						</Route>
+							flexShrink: 0,
+							"& .MuiDrawer-paper": {
+								width: drawerWidth,
+								boxSizing: "border-box",
+							},
+						}}
+						variant='persistent'
+						anchor='left'
+						open={open}
+					>
+						<DrawerHeader>
+							<IconButton onClick={handleDrawerClose}></IconButton>
+						</DrawerHeader>
+						<Divider />
+						<List>
+							<ListItem component={Link} to='/addbook' button key={"inbox"}>
+								<ListItemIcon>
+									<AccountBoxIcon />
+								</ListItemIcon>
+								<ListItemText primary={"Add book"} />
+							</ListItem>
+							<ListItem
+								component={Link}
+								to='/viewrequests'
+								button
+								key={"inbox"}
+							>
+								<ListItemIcon>
+									<LibraryBooksIcon />
+								</ListItemIcon>
+								<ListItemText primary={"View Request"} />
+							</ListItem>
+							<ListItem component={Link} to='/searchuser' button key={"inbox"}>
+								<ListItemIcon>
+									<InboxIcon />
+								</ListItemIcon>
+								<ListItemText primary={"Search"} />
+							</ListItem>
+							<ListItem component={Link} to='/second' button key={"inbox"}>
+								<ListItemIcon>
+									<CollectionsBookmarkIcon />
+								</ListItemIcon>
+								<ListItemText primary={"Donate/Request new"} />
+							</ListItem>
+						</List>
+					</Drawer>
+					<Main open={open}>
+						<DrawerHeader />
+						<Switch>
+							<Route path='/addbook'>
+								<AddBook />
+							</Route>
+							<Route path='/viewrequests'>
+								<ViewRequests />
+							</Route>
+							<Route path='/searchuser'>
+								<Search />
+							</Route>
 
-						<Redirect to='/addbook' />
-					</Switch>
-				</Main>
-			</Box>
+							<Redirect to='/addbook' />
+						</Switch>
+					</Main>
+				</Box>
+			)}
 		</Router>
 	);
 };

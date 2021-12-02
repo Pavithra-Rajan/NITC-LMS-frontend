@@ -43,6 +43,9 @@ const RequestComponent = () => {
 		axios
 			.get(`/user/${user.user_id}/borrow`, config)
 			.then((resp) => {
+				console.log("response of borrow");
+				console.log(user.user_id);
+				console.log(resp.data);
 				setRequestRows(resp.data.requests);
 				setIsLoading(false);
 			})
