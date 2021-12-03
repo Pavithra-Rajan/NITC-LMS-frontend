@@ -263,10 +263,14 @@ const SignIN = ({ toggleForm }) => {
 				}
 			})
 			.catch((err) => {
-				if (err.response.data) {
-					console.log(err.response.data.message);
+				if (!err.response) {
+					history.push("/error");
 				} else {
-					console.log(err.response);
+					if (err.response.data) {
+						console.log(err.response.data.message);
+					} else {
+						console.log(err.response);
+					}
 				}
 				// console.log(err.response.data.message);
 				setTimeout(() => {

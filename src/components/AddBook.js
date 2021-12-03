@@ -58,13 +58,9 @@ export default function AddBook() {
 
 	const handleDelete = (value) => {
 		//deletion of tags
-		if (label == "tags") {
-			const newtags = tags.filter((val) => val !== value);
-			setTags(newtags);
-		} else if (label == "authors") {
-			const newAuthors = authors.filter((val) => val !== value);
-			setTags(newAuthors);
-		}
+
+		const newtags = tags.filter((val) => val !== value);
+		setTags(newtags);
 	};
 	const handleOnSubmit = (e, label) => {
 		//adding new tags
