@@ -20,7 +20,6 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import MoneyIcon from "@mui/icons-material/Money";
-import TextField from "@mui/material/TextField";
 import AddBook from "../../components/AddBook";
 import { useHistory } from "react-router";
 
@@ -33,12 +32,11 @@ import {
 	Redirect,
 } from "react-router-dom";
 import Search from "../../components/SearchComponent";
-import ViewRequests from "../../components/ViewRequests";
+import ViewRequests from "../../components/ChekoutRequests";
 import { AuthContext } from "../../AuthContext";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
-import DonateBook from "../../components/DonateBook";
-import SuggestBook from "../../components/Suggestions";
-import Fines from "../../components/Fines";
+import DonateBook from "../../components/ViewDonateRequests";
+import FineComponent from "../../components/Fines";
 
 const drawerWidth = 240;
 
@@ -235,10 +233,9 @@ export const Admin = () => {
 							</Route>
 							<Route path='/donate'>
 								<DonateBook />
-								<SuggestBook />
 							</Route>
 							<Route path='/fines'>
-								<Fines />
+								<FineComponent />
 							</Route>
 
 							<Redirect to='/addbook' />
