@@ -86,18 +86,20 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export const Dashboard = () => {
 	const theme = useTheme();
 	const [open, setOpen] = useState(true);
-	const [user, setUser] = useState(null);
+	const [userLogged, setUserLogged] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const history = useHistory();
-	const { isLoggedIn, userLoggedIn } = useContext(AuthContext);
+	const { user, isLoggedIn, Logout, LoginUser } = useContext(AuthContext);
 	useEffect(() => {
+		LoginUser();
 		if (!isLoggedIn) {
 			// console.log(userLoggedIn);
 			history.push("/error");
 			console.log("no user");
 		} else {
 			console.log("user logged in");
-			setUser(userLoggedIn);
+			setUserLogged(user);
+			console.log(user);
 		}
 	}, []);
 
@@ -114,6 +116,7 @@ export const Dashboard = () => {
 		setTimeout(() => {
 			localStorage.removeItem("user");
 			localStorage.removeItem("admin");
+			Logout();
 			history.push("/login");
 		}, 1000);
 	};
@@ -178,25 +181,30 @@ export const Dashboard = () => {
 							</DrawerHeader>
 							<Divider />
 							<List>
-								<ListItem component={Link} to='/books' button key={"inbox"}>
+								<ListItem component={Link} to='/books' button key={"books"}>
 									<ListItemIcon>
 										<LibraryBooksIcon />
 									</ListItemIcon>
 									<ListItemText primary={"Books"} />
 								</ListItem>
-								<ListItem component={Link} to='/borrowal' button key={"inbox"}>
+								<ListItem
+									component={Link}
+									to='/borrowal'
+									button
+									key={"borrowal"}
+								>
 									<ListItemIcon>
 										<InboxIcon />
 									</ListItemIcon>
 									<ListItemText primary={"Borrowal"} />
 								</ListItem>
-								<ListItem component={Link} to='/donate' button key={"inbox"}>
+								<ListItem component={Link} to='/donate' button key={"donate"}>
 									<ListItemIcon>
 										<CollectionsBookmarkIcon />
 									</ListItemIcon>
 									<ListItemText primary={"Donate/Request"} />
 								</ListItem>
-								<ListItem component={Link} to='/dues' button key={"inbox"}>
+								<ListItem component={Link} to='/dues' button key={"dues"}>
 									<ListItemIcon>
 										<AccountBalanceIcon />
 									</ListItemIcon>
@@ -219,7 +227,7 @@ export const Dashboard = () => {
 								<Route path='/donate'>
 									<RequestAndDonate />
 								</Route>
-								<Redirect to='/books' />
+								{/* <Redirect to='/books' /> */}
 							</Switch>
 						</Main>
 					</Box>

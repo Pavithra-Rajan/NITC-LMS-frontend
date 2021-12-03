@@ -44,8 +44,10 @@ export default function AddBook() {
 		setAlignment(newAlignment);
 	};
 
-	const [tags, SetTags] = useState([]);
+	const [tags, setTags] = useState([]);
+	const [authors, setAuthors] = useState([]);
 	const tagRef = useRef();
+	const authorRef = useRef();
 
 	const [auth, SetAuth] = useState([]);
 	const AuthRef = useRef();
@@ -56,14 +58,20 @@ export default function AddBook() {
 
 	const handleDelete = (value) => {
 		//deletion of tags
+
 		const newtags = tags.filter((val) => val !== value);
-		SetTags(newtags);
+		setTags(newtags);
 	};
-	const handleOnSubmit = (e) => {
+	const handleOnSubmit = (e, label) => {
 		//adding new tags
 		e.preventDefault();
-		SetTags([...tags, tagRef.current.value]);
-		tagRef.current.value = "";
+		if (label == "tags") {
+			setTags([...tags, tagRef.current.value]);
+			tagRef.current.value = "";
+		} else if (label == "authors") {
+			setAuthors([...authors, authorRef.current.value]);
+			authorRef.current.value = "";
+		}
 	};
 
 	const handleDeleteAuth = (value) => {
@@ -159,7 +167,7 @@ export default function AddBook() {
 							SetPub(e.target.value);
 						}}
 					/>
-					
+
 					<br />
 					<Box sx={{ flexGrow: 1 }}>
 						<form onSubmit={handleOnSubmitAuth}>
@@ -193,7 +201,35 @@ export default function AddBook() {
 						<form onSubmit={handleOnSubmit}>
 							<TextField
 								inputRef={tagRef}
-								style={{ width: 400, marginTop: "20px",marginBottom:"25px"}}
+								style={{ width: 400, marginTop: "20px", marginBottom: "25px" }}
+								variant='standard'
+								sx={{ margin: "1rem 0" }}
+								margin='none'
+								placeholder={tags.length < 4 ? "Tags" : ""}
+								InputProps={{
+									startAdornment: (
+										<Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
+											{tags.map((data, index) => {
+												return (
+													<Tags
+														data={data}
+														handleDelete={handleDelete}
+														key={index}
+													/>
+												);
+											})}
+										</Box>
+									),
+								}}
+							/>
+						</form>
+					</Box>
+					<br />
+					<Box sx={{ flexGrow: 1 }}>
+						<form onSubmit={handleOnSubmit}>
+							<TextField
+								inputRef={tagRef}
+								style={{ width: 400, marginTop: "35px" }}
 								variant='standard'
 								sx={{ margin: "1rem 0" }}
 								margin='none'

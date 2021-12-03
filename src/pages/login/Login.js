@@ -2,12 +2,13 @@ import sigINImng from "./signIN.jpg";
 import sigUPImng from "./signUP.jpg";
 import "./Login.css";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Alert } from "@mui/material";
 import { AdminPanelSettings } from "@mui/icons-material";
 import { useHistory } from "react-router-dom";
 import { Redirect } from "react-router";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
+import { AuthContext } from "../../AuthContext";
 
 const SignUP = ({ toggleForm }) => {
 	const [selectedOption, setSelectedOption] = useState(null);
@@ -142,6 +143,7 @@ const SignUP = ({ toggleForm }) => {
 								list='prog'
 								required
 							/>
+							
 							<datalist id='prog'>
 								<option>B.Tech</option>
 								<option>M.Tech</option>
@@ -234,7 +236,6 @@ const SignIN = ({ toggleForm }) => {
 	};
 	const [data, setData] = useState(initialData);
 	const [error, setError] = useState(null);
-	const [success, setSuccess] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const history = useHistory();
 	const handleChange = (e) => {
@@ -251,28 +252,31 @@ const SignIN = ({ toggleForm }) => {
 			data: data,
 		})
 			.then((resp) => {
-				setError(null);
-				setSuccess(true);
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);
+				console.log(resp);
 				const userLoggedIn = resp.data;
-				console.log(userLoggedIn);
-				if (userLoggedIn.admin) {
-					localStorage.setItem("admin", JSON.stringify(userLoggedIn));
-					history.push("/admin");
-				} else {
+				if (userLoggedIn) {
 					localStorage.setItem("user", JSON.stringify(userLoggedIn));
-					history.push("/dashboard");
+					if (userLoggedIn.admin) history.push("/admin");
+					else history.push("/dashboard");
 				}
 			})
 			.catch((err) => {
-				setError(err.response.data.message);
+				if (!err.response) {
+					history.push("/error");
+				} else {
+					if (err.response.data) {
+						console.log(err.response.data.message);
+					} else {
+						console.log(err.response);
+					}
+				}
 				// console.log(err.response.data.message);
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);
-				setSuccess(null);
 			});
 	};
 	return (
@@ -315,11 +319,6 @@ const SignIN = ({ toggleForm }) => {
 							{error && (
 								<Alert variant='filled' severity='error'>
 									{error}
-								</Alert>
-							)}
-							{success && (
-								<Alert variant='filled' severity='success'>
-									Succesfully Logged In
 								</Alert>
 							)}
 							<p className='signup'>

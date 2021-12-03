@@ -92,6 +92,7 @@ const BookComponent = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const { user } = useContext(AuthContext);
 	useEffect(() => {
+		console.log(user);
 		axios
 			.get(`/book?userID=${user.user_id}`)
 			.then((resp) => {
