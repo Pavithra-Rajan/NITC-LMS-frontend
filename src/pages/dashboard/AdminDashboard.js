@@ -186,7 +186,7 @@ export const Admin = () => {
 								<ListItemIcon>
 									<AccountBoxIcon />
 								</ListItemIcon>
-								<ListItemText primary={"Profle"} />
+								<ListItemText primary={"Profile"} />
 							</ListItem>
 							<ListItem component={Link} to='/addbook' button key={"inbox"}>
 								<ListItemIcon>

@@ -42,18 +42,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 	},
 }));
 
-const originalData = [
-	{ user_ID: "B190632CS", ISBN: "9780262033848", issue_id: 4 },
-	{ user_ID: "B190529CS", ISBN: "9781337627900", issue_id: 2 },
-	{ user_ID: "B190402CS", ISBN: "9781565770393", issue_id: 1 },
-	{ user_ID: "B190672CS", ISBN: "9780134746753", issue_id: 3 },
-	{ user_ID: "B190539CS", ISBN: "9780262033848", issue_id: 1 },
-	{ user_ID: "B190412CS", ISBN: "9780262033848", issue_id: 5 },
-	{ user_ID: "B190612CS", ISBN: "9781337627900", issue_id: 1 },
-	{ user_ID: "B190589CS", ISBN: "9780262033848", issue_id: 3 },
-	{ user_ID: "B190502CS", ISBN: "9780133591620", issue_id: 2 },
-];
-
 export default function App() {
 	const [initdata, setInitData] = useState([]);
 	const [data, setData] = useState([]);
@@ -81,14 +69,14 @@ export default function App() {
 
 		let columns = [
 			{
-				Header: "ISBN",
+				Header: "USER ID",
 				accessor: "user_id",
 				sortable: false,
 				show: true,
 				displayValue: "ISBN",
 			},
 			{
-				Header: "Book Number",
+				Header: "ISBN",
 				accessor: "isbn",
 				sortable: false,
 				show: true,

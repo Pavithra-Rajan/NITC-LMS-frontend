@@ -187,7 +187,7 @@ export const Dashboard = () => {
 									<ListItemIcon>
 										<AccountBoxIcon />
 									</ListItemIcon>
-									<ListItemText primary={"Profle"} />
+									<ListItemText primary={"Profile"} />
 								</ListItem>
 								<ListItem component={Link} to='/books' button key={"books"}>
 									<ListItemIcon>

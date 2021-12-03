@@ -5,13 +5,14 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert } from "@mui/material";
 import { AdminPanelSettings } from "@mui/icons-material";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Redirect } from "react-router";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
 import { AuthContext } from "../../AuthContext";
 
 const SignUP = ({ toggleForm }) => {
 	const [selectedOption, setSelectedOption] = useState(null);
+	const history = useHistory();
 	const initialData = {
 		userID: null,
 		userName: null,
@@ -33,6 +34,7 @@ const SignUP = ({ toggleForm }) => {
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setError(null);
 		console.log(data);
 		axios({
 			method: "post",
@@ -40,10 +42,11 @@ const SignUP = ({ toggleForm }) => {
 			data: data,
 		})
 			.then((resp) => {
-				return <SignIN />;
+				history.push("/login");
 			})
 			.catch((err) => {
-				setError(err.response);
+				console.log(err.response.data.message);
+				setError(err.response.data.message);
 			});
 	};
 	return (
@@ -216,9 +219,9 @@ const SignUP = ({ toggleForm }) => {
 					)}
 					<p className='signup'>
 						Already have an account ?
-						<a href='#' onClick={toggleForm}>
+						<Link to={"/login"} onClick={toggleForm}>
 							Log In.
-						</a>
+						</Link>
 					</p>
 				</form>
 			</div>
