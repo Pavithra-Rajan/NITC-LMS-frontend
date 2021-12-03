@@ -143,6 +143,7 @@ const SignUP = ({ toggleForm }) => {
 								list='prog'
 								required
 							/>
+							
 							<datalist id='prog'>
 								<option>B.Tech</option>
 								<option>M.Tech</option>

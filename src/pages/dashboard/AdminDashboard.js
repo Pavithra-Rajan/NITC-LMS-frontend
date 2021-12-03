@@ -37,7 +37,6 @@ import { AuthContext } from "../../AuthContext";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
 import DonateBook from "../../components/ViewDonateRequests";
 import FineComponent from "../../components/Fines";
-
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
