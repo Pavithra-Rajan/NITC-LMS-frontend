@@ -143,7 +143,7 @@ const SignUP = ({ toggleForm }) => {
 								list='prog'
 								required
 							/>
-							
+
 							<datalist id='prog'>
 								<option>B.Tech</option>
 								<option>M.Tech</option>
@@ -268,7 +268,7 @@ const SignIN = ({ toggleForm }) => {
 					history.push("/error");
 				} else {
 					if (err.response.data) {
-						console.log(err.response.data.message);
+						setError(err.response.data.message);
 					} else {
 						console.log(err.response);
 					}

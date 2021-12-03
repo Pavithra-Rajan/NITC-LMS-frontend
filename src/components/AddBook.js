@@ -3,58 +3,135 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Cancel, Public, Tag } from "@mui/icons-material";
-import { FormControl, Stack, Typography } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
+import { Alert } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRef, useState } from "react";
-import Counter from "./counter";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { AuthContext } from "../AuthContext";
+import axios from "axios";
+import BookLoaderComponent from "./Loaders/BookLoader";
+
 const Tags = ({ data, handleDelete }) => {
 	//styling for the tags in the new form
 	return (
 		<Box
 			sx={{
-				background: "#5263bf",
+				background: "#677eff",
 				height: "90%",
 				display: "flex",
-				padding: "0.3rem",
-				margin: "0 0.5rem 0 0",
+				margin: "0 0.5rem 0.5rem 0",
 				justifyContent: "center",
 				alignContent: "center",
 				color: "#ffffff",
-				borderRadius: 1,
+				borderRadius: 100,
 			}}
 		>
 			<Stack direction='row' gap={1}>
-				<Typography>{data}</Typography>
-				<Cancel
-					sx={{ cursor: "pointer" }}
-					onClick={() => {
-						handleDelete(data);
-					}}
+				<Chip
+					size='small'
+					style={{ color: "white" }}
+					label={data}
+					onDelete={() => handleDelete(data)}
 				/>
 			</Stack>
 		</Box>
 	);
 };
 
-export default function AddBook() {
-	const [alignment, setAlignment] = React.useState("New"); //default when component renders is New
+const Counter = ({ nums, handleCount }) => {
+	return (
+		<Box
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+				"& > *": {
+					m: 1,
+				},
+			}}
+		>
+			<ButtonGroup
+				variant='outlined'
+				color='primary'
+				aria-label='outlined button group'
+			>
+				<Button
+					onClick={() => {
+						handleCount("dec");
+					}}
+				>
+					-
+				</Button>
+				<Button disabled style={{ color: "#000000" }}>
+					{nums}
+				</Button>
+				<Button
+					onClick={() => {
+						handleCount("inc");
+					}}
+				>
+					+
+				</Button>
+			</ButtonGroup>
+		</Box>
+	);
+};
 
-	const handleChange = (event, newAlignment) => {
-		setAlignment(newAlignment);
-	};
-
+const AddNewBook = () => {
 	const [tags, setTags] = useState([]);
 	const [authors, setAuthors] = useState([]);
 	const tagRef = useRef();
 	const authorRef = useRef();
 
-	const [auth, SetAuth] = useState([]);
-	const AuthRef = useRef();
-
 	const [ISBN, SetISBN] = useState("");
 	const [Name, SetName] = useState("");
 	const [Pub, SetPub] = useState("");
+	const [nums, setNums] = useState(1);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [success, setSucess] = useState(false);
+	const { user } = React.useContext(AuthContext);
+
+	const handleSubmit = () => {
+		setIsLoading(true);
+		const data = {
+			ISBN: ISBN,
+			bookName: Name,
+			publisher: Pub,
+			authors: authors,
+			tags: tags,
+			nums: nums,
+		};
+		const config = {
+			headers: { Authorization: `Bearer ${user.token}` },
+		};
+		axios
+			.post(`/book/register`, data, config)
+			.then((resp) => {
+				setError(null);
+				console.log(resp);
+				setSucess(true);
+				setIsLoading(false);
+			})
+			.catch((err) => {
+				setSucess(false);
+				console.log(err.response);
+				setError(err.response.data.message);
+				setIsLoading(false);
+				console.log(error);
+			});
+	};
+
+	const handleCount = (type) => {
+		if (type === "inc") {
+			setNums(nums + 1);
+		} else if (type == "dec") {
+			if (nums > 0) {
+				setNums(nums - 1);
+			}
+		}
+	};
 
 	const handleDelete = (value) => {
 		//deletion of tags
@@ -62,72 +139,36 @@ export default function AddBook() {
 		const newtags = tags.filter((val) => val !== value);
 		setTags(newtags);
 	};
-	const handleOnSubmit = (e, label) => {
-		//adding new tags
-		e.preventDefault();
-		if (label == "tags") {
-			setTags([...tags, tagRef.current.value]);
-			tagRef.current.value = "";
-		} else if (label == "authors") {
-			setAuthors([...authors, authorRef.current.value]);
-			authorRef.current.value = "";
-		}
-	};
-
 	const handleDeleteAuth = (value) => {
 		//deletion of authors
-		const NewAuth = auth.filter((val) => val !== value);
-		SetAuth(NewAuth);
+		const NewAuth = authors.filter((val) => val !== value);
+		setAuthors(NewAuth);
 	};
 	const handleOnSubmitAuth = (e) => {
 		//adding new authors
+		function titleCase(str) {
+			str = str.toLowerCase().split(" ");
+			for (var i = 0; i < str.length; i++) {
+				str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+			}
+			return str.join(" ");
+		}
 		e.preventDefault();
-		SetAuth([...auth, AuthRef.current.value]);
-		AuthRef.current.value = "";
+		setAuthors([...authors, titleCase(authorRef.current.value)]);
+		authorRef.current.value = "";
 	};
+	const handleOnSubmitTags = (e) => {
+		//adding new tags
 
+		e.preventDefault();
+		setTags([...tags, tagRef.current.value.toLowerCase()]);
+		tagRef.current.value = "";
+	};
 	return (
-		<div>
-			<ToggleButtonGroup
-				color='primary'
-				value={alignment}
-				exclusive
-				onChange={handleChange}
-			>
-				<ToggleButton value='Existing'>Existing</ToggleButton>
-				<ToggleButton value='New'>New</ToggleButton>
-			</ToggleButtonGroup>
-			{/*Conditional rendering when existing is selected*/}
-			{alignment === "Existing" && (
-				<div>
-					<TextField
-						id='ISBN'
-						label='ISBN'
-						variant='standard'
-						justifyContent='center'
-						align='center'
-						style={{ width: 400, marginTop: "20px" }}
-						value={ISBN}
-						onChange={(e) => {
-							SetISBN(e.target.value);
-						}}
-					/>
-					<br />
-					<Button
-						variant='contained'
-						style={{
-							backgroundColor: "#677eff",
-							color: "#FFFFFF",
-							marginTop: "20px",
-						}}
-					>
-						Submit
-					</Button>
-				</div>
-			)}
-
-			{/*Conditional rendering when New is selected*/}
-			{alignment === "New" && (
+		<>
+			{isLoading ? (
+				<BookLoaderComponent />
+			) : (
 				<div>
 					<TextField
 						id='ISBN'
@@ -169,92 +210,93 @@ export default function AddBook() {
 					/>
 
 					<br />
-					<Box sx={{ flexGrow: 1 }}>
-						<form onSubmit={handleOnSubmitAuth}>
+					<Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1 }}>
+						<div
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleOnSubmitAuth(e);
+								}
+							}}
+						>
 							<TextField
-								inputRef={AuthRef}
+								inputRef={authorRef}
 								style={{ width: 400, marginTop: "35px" }}
+								multiline={true}
 								variant='standard'
-								sx={{ margin: "1rem 0" }}
+								sx={{ margin: "1rem 0 ", width: "100%" }}
 								margin='none'
-								placeholder={auth.length < 4 ? "Authors" : ""}
-								InputProps={{
-									startAdornment: (
-										<Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
-											{auth.map((data, index) => {
-												return (
-													<Tags
-														data={data}
-														handleDelete={handleDeleteAuth}
-														key={index}
-													/>
-												);
-											})}
-										</Box>
-									),
-								}}
+								placeholder={authors.length < 4 ? "Authors" : ""}
 							/>
-						</form>
+							{authors.length > 0 && (
+								<Box
+									sx={{
+										margin: "0 0.2rem 0 0",
+										display: "flex",
+										maxWidth: 400,
+										flexWrap: "wrap",
+									}}
+								>
+									{authors.map((data, index) => {
+										return (
+											<Tags
+												data={data}
+												handleDelete={handleDeleteAuth}
+												key={index}
+											/>
+										);
+									})}
+								</Box>
+							)}
+						</div>
 					</Box>
 
-					<Box sx={{ flexGrow: 1 }}>
-						<form onSubmit={handleOnSubmit}>
+					<Box sx={{ display: "flex", justifyContent: "center", flexGrow: 1 }}>
+						<div
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleOnSubmitTags(e);
+								}
+							}}
+						>
 							<TextField
 								inputRef={tagRef}
+								multiline={true}
 								style={{ width: 400, marginTop: "20px", marginBottom: "25px" }}
 								variant='standard'
-								sx={{ margin: "1rem 0" }}
+								sx={{ margin: "1rem 0 ", width: "100%" }}
 								margin='none'
 								placeholder={tags.length < 4 ? "Tags" : ""}
-								InputProps={{
-									startAdornment: (
-										<Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
-											{tags.map((data, index) => {
-												return (
-													<Tags
-														data={data}
-														handleDelete={handleDelete}
-														key={index}
-													/>
-												);
-											})}
-										</Box>
-									),
-								}}
 							/>
-						</form>
+							{tags.length > 0 && (
+								<>
+									<Box
+										sx={{
+											margin: "0 0.2rem 0 0",
+											display: "flex",
+											maxWidth: 400,
+											flexWrap: "wrap",
+										}}
+									>
+										{tags.map((data, index) => {
+											return (
+												<Tags
+													data={data}
+													handleDelete={handleDelete}
+													key={index}
+												/>
+											);
+										})}
+									</Box>
+								</>
+							)}
+						</div>
 					</Box>
 					<br />
-					<Box sx={{ flexGrow: 1 }}>
-						<form onSubmit={handleOnSubmit}>
-							<TextField
-								inputRef={tagRef}
-								style={{ width: 400, marginTop: "35px" }}
-								variant='standard'
-								sx={{ margin: "1rem 0" }}
-								margin='none'
-								placeholder={tags.length < 4 ? "Tags" : ""}
-								InputProps={{
-									startAdornment: (
-										<Box sx={{ margin: "0 0.2rem 0 0", display: "flex" }}>
-											{tags.map((data, index) => {
-												return (
-													<Tags
-														data={data}
-														handleDelete={handleDelete}
-														key={index}
-													/>
-												);
-											})}
-										</Box>
-									),
-								}}
-							/>
-						</form>
-					</Box>
-					<Counter />
+
+					<Counter nums={nums} handleCount={handleCount} />
 					<br />
 					<Button
+						onClick={handleSubmit}
 						variant='contained'
 						style={{
 							backgroundColor: "#677eff",
@@ -264,8 +306,155 @@ export default function AddBook() {
 					>
 						Submit
 					</Button>
+					<br />
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							width: "300px",
+							margin: "20px 0",
+							width: "100%",
+						}}
+					>
+						{success && (
+							<Alert variant='outlined' severity='success'>
+								book added succesfully
+							</Alert>
+						)}
+						{error && (
+							<Alert variant='outlined' severity='error'>
+								{error}
+							</Alert>
+						)}
+					</div>
 				</div>
 			)}
+		</>
+	);
+};
+
+const AddOldBook = () => {
+	const [ISBN, SetISBN] = useState("");
+	const [Nums, SetNums] = useState(0);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [success, setSucess] = useState(false);
+	const { user } = React.useContext(AuthContext);
+	const handleSubmit = () => {
+		setIsLoading(true);
+		setSucess(false);
+		setError(null);
+		const data = {};
+		const config = {
+			headers: { Authorization: `Bearer ${user.token}` },
+		};
+		axios
+			.post(`/book/add/${ISBN}?nums=${Nums}`, data, config)
+			.then((resp) => {
+				console.log(resp);
+				setSucess(true);
+				setIsLoading(false);
+			})
+			.catch((err) => {
+				setError(err.response.data.message);
+				setIsLoading(false);
+			});
+	};
+	return (
+		<>
+			{isLoading ? (
+				<BookLoaderComponent />
+			) : (
+				<div>
+					<TextField
+						id='ISBN'
+						label='ISBN'
+						variant='standard'
+						justifyContent='center'
+						align='center'
+						style={{ width: 400, marginTop: "20px" }}
+						value={ISBN}
+						onChange={(e) => {
+							SetISBN(e.target.value);
+						}}
+					/>
+					<br />
+					<TextField
+						id='Number'
+						label='Numer Of Copies'
+						variant='standard'
+						justifyContent='center'
+						align='center'
+						style={{ width: 400, marginTop: "20px" }}
+						value={Nums}
+						onChange={(e) => {
+							SetNums(e.target.value);
+						}}
+					/>
+					<br />
+					<Button
+						onClick={handleSubmit}
+						variant='contained'
+						style={{
+							backgroundColor: "#677eff",
+							color: "#FFFFFF",
+							marginTop: "20px",
+						}}
+					>
+						Submit
+					</Button>
+					<br />
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							width: "300px",
+							margin: "20px 0",
+							width: "100%",
+						}}
+					>
+						{success && (
+							<Alert variant='outlined' severity='success'>
+								The book have been succesfully updated
+							</Alert>
+						)}
+						{error && (
+							<Alert variant='outlined' severity='error'>
+								{error}
+							</Alert>
+						)}
+					</div>
+				</div>
+			)}
+		</>
+	);
+};
+
+export default function AddBook() {
+	const [isNew, setIsNew] = useState(1); //default when component renders is New
+
+	return (
+		<div>
+			<ButtonGroup color='primary' exclusive>
+				<Button
+					disabled={isNew}
+					onClick={() => {
+						setIsNew(1);
+					}}
+				>
+					New
+				</Button>
+				<Button
+					disabled={!isNew}
+					onClick={() => {
+						setIsNew(0);
+					}}
+				>
+					Existing
+				</Button>
+			</ButtonGroup>
+			{/*Conditional rendering when existing is selected*/}
+			{isNew ? <AddNewBook /> : <AddOldBook />}
 		</div>
 	);
 }

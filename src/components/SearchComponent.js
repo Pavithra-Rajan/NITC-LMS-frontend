@@ -119,7 +119,6 @@ export default function App() {
 		axios
 			.get(`/admin/checkin/${issue_id}`, config)
 			.then((resp) => {
-				setSearchInput("");
 				setRefresh(!refresh);
 			})
 			.catch((err) => console.log(err));

@@ -20,6 +20,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { useHistory } from "react-router";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
 
 import logo from "./logo.png";
 
@@ -36,6 +37,7 @@ import { AuthContext, userAuth } from "../../AuthContext";
 import RequestAndDonate from "../../components/RequestAndDonate";
 import { Borrowal } from "../../components/Borrowal";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
+import Profile from "../../components/Profile";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -181,6 +183,12 @@ export const Dashboard = () => {
 							</DrawerHeader>
 							<Divider />
 							<List>
+								<ListItem component={Link} to='/profile' button key={"profile"}>
+									<ListItemIcon>
+										<AccountBoxIcon />
+									</ListItemIcon>
+									<ListItemText primary={"Profle"} />
+								</ListItem>
 								<ListItem component={Link} to='/books' button key={"books"}>
 									<ListItemIcon>
 										<LibraryBooksIcon />
@@ -227,7 +235,10 @@ export const Dashboard = () => {
 								<Route path='/donate'>
 									<RequestAndDonate />
 								</Route>
-								{/* <Redirect to='/books' /> */}
+								<Route path='/profile'>
+									<Profile role={"user"} />
+								</Route>
+								<Redirect to='/profile' />
 							</Switch>
 						</Main>
 					</Box>

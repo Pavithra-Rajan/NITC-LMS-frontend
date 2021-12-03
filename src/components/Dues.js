@@ -7,70 +7,79 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { AuthContext } from "../AuthContext";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
-	  backgroundColor: "#3649b3",
-	  color: theme.palette.common.white
+		backgroundColor: "#3649b3",
+		color: theme.palette.common.white,
 	},
 	[`&.${tableCellClasses.body}`]: {
-	  fontSize: 14
-	}
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+		fontSize: 14,
+	},
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
 	"&:nth-of-type(odd)": {
-	  backgroundColor: theme.palette.action.hover
+		backgroundColor: theme.palette.action.hover,
 	},
 
 	"&:last-child td, &:last-child th": {
-	  border: 1
-	}
-  }));
-
-
-function DuesData(issue_ID, ISBN, book_number, name, fine) {
-	return { issue_ID, ISBN, book_number, name, fine };
-  }
-  
-const DuesRows = [
-	DuesData(47, " 9780071160902", 1, "Object Oriented Systems Development", 72.5)
-  ];
-
+		border: 1,
+	},
+}));
 
 const DueComponent = () => {
+	const [duesRows, setDuesRows] = React.useState([]);
+	const [isLoading, setIsLoading] = React.useState(true);
+	const { user } = React.useContext(AuthContext);
+	React.useEffect(() => {
+		setIsLoading(true);
+		const config = {
+			headers: { Authorization: `Bearer ${user.token}` },
+		};
+		axios
+			.get(`/user/${user.user_id}/dues`, config)
+			.then((resp) => {
+				setDuesRows(resp.data.fines);
+				setIsLoading(false);
+			})
+			.catch((err) => {
+				setIsLoading(false);
+				console.log(err.response);
+			});
+	}, []);
 	return (
 		<>
-			<br/>			
+			<br />
 			<h3>Dues to be paid</h3>
-			<br/>
+			<br />
 			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 700 }} aria-label="customized table">
+				<Table sx={{ minWidth: 700 }} aria-label='customized table'>
 					<TableHead>
-					<TableRow>
-						<StyledTableCell align="left">Issue ID</StyledTableCell>
-						<StyledTableCell align="left">ISBN</StyledTableCell>
-						<StyledTableCell align="left">Book Number</StyledTableCell>
-						<StyledTableCell align="left">Book Name</StyledTableCell>
-						<StyledTableCell align="left">Fine in (Rs)</StyledTableCell>
-					</TableRow>
+						<TableRow>
+							<StyledTableCell align='left'>ID</StyledTableCell>
+							<StyledTableCell align='left'>Fine in (Rs)</StyledTableCell>
+							<StyledTableCell align='left'>Due Date</StyledTableCell>
+						</TableRow>
 					</TableHead>
 					<TableBody>
-					{DuesRows.map((row) => (
-						<StyledTableRow key={row.issue_ID}>
-						<StyledTableCell component="th" scope="row">
-							{row.issue_ID}
-						</StyledTableCell>
-						<StyledTableCell align="left">{row.ISBN}</StyledTableCell>
-						<StyledTableCell align="left">{row.book_number}</StyledTableCell>
-						<StyledTableCell align="left">{row.name}</StyledTableCell>
-						<StyledTableCell align="left">{row.fine}</StyledTableCell>
-						</StyledTableRow>
-					))}
+						{duesRows.map((row) => (
+							<StyledTableRow key={row.fine_id}>
+								<StyledTableCell component='th' scope='row'>
+									{row.fine_id}
+								</StyledTableCell>
+								<StyledTableCell align='left'>{row.amount}</StyledTableCell>
+								<StyledTableCell align='left'>
+									{row.payment_date}
+								</StyledTableCell>
+							</StyledTableRow>
+						))}
 					</TableBody>
 				</Table>
-				</TableContainer>
+			</TableContainer>
 		</>
 	);
 };
-export default DueComponent
+export default DueComponent;

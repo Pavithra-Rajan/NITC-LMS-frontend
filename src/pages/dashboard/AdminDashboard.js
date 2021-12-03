@@ -37,6 +37,7 @@ import { AuthContext } from "../../AuthContext";
 import BookLoaderComponent from "../../components/Loaders/BookLoader";
 import DonateBook from "../../components/ViewDonateRequests";
 import FineComponent from "../../components/Fines";
+import Profile from "../../components/Profile";
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -181,6 +182,12 @@ export const Admin = () => {
 						</DrawerHeader>
 						<Divider />
 						<List>
+							<ListItem component={Link} to='/profile' button key={"profile"}>
+								<ListItemIcon>
+									<AccountBoxIcon />
+								</ListItemIcon>
+								<ListItemText primary={"Profle"} />
+							</ListItem>
 							<ListItem component={Link} to='/addbook' button key={"inbox"}>
 								<ListItemIcon>
 									<AccountBoxIcon />
@@ -236,8 +243,10 @@ export const Admin = () => {
 							<Route path='/fines'>
 								<FineComponent />
 							</Route>
-
-							<Redirect to='/addbook' />
+							<Route path='/profile'>
+								<Profile role={"admin"} />
+							</Route>
+							<Redirect to='/profile' />
 						</Switch>
 					</Main>
 				</Box>

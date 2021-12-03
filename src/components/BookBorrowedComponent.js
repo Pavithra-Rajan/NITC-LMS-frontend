@@ -69,7 +69,7 @@ const BorrowedComponent = () => {
 					<TableBody>
 						{borrowedBooks.map((row) => (
 							<StyledTableRow key={row.issue_ID}>
-								<StyledTableCell align='left'>{row.ISBN}</StyledTableCell>
+								<StyledTableCell align='left'>{row.isbn}</StyledTableCell>
 								<StyledTableCell align='left'>{row.book_name}</StyledTableCell>
 								<StyledTableCell align='left'>{row.issue_date}</StyledTableCell>
 								<StyledTableCell align='left'>
