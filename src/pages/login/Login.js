@@ -280,6 +280,7 @@ const SignIN = ({ toggleForm }) => {
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);
+				console.log(err.response);
 			});
 	};
 	return (
