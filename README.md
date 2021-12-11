@@ -4,6 +4,44 @@
 ## Responsiveness
 ![responsive](/screenshots/Responsive.png)
 
+## login and Registration
+![Login](/screenshots/1.PNG)
+![Registration](/screenshots/2.PNG)
+
+## User Profile
+![Prof1](/screenshots/3.PNG)
+
+## Books
+![books](/screenshots/4.png)
+
+## Borrow and Request
+![borrow](/screenshots/5.png)
+
+## User Dues
+![dues](/screenshots/7.png)
+
+## Suggest and Donate
+![donate](/screenshots/8.png)
+---
+## Admin Profile
+![admin](/screenshots/9.png)
+
+## Add new/existing books
+![add](/screenshots/10.png)
+
+## Approve/Reject
+![approval](/screenshots/11.png)
+
+## check-In
+![Checkin](/screenshots/12.png)
+
+## Request
+![requests](/screenshots/13.png)
+
+## Add/View fines
+![fines](/screenshots/14.png)
+![fines](/screenshots/15.png)
+---
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
