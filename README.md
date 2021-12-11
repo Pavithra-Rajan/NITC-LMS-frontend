@@ -4,7 +4,7 @@
 ## Responsiveness
 ![responsive](/screenshots/Responsive.png)
 
-## login and Registration
+## Login and Registration
 ![Login](/screenshots/1.PNG)
 ![Registration](/screenshots/2.PNG)
 
@@ -32,7 +32,7 @@
 ## Approve/Reject
 ![approval](/screenshots/11.png)
 
-## check-In
+## Check-In
 ![Checkin](/screenshots/12.png)
 
 ## Request
